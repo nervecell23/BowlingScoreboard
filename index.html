@@ -8,8 +8,8 @@
   <body>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <!-- <script src="./src/index.js"></script> -->
-    <script src="./src/bowlingBoard.js"></script>
-    <script src="./src/frame.js"></script>
+    <script src="./lib/bowlingBoard.js"></script>
+    <script src="./lib/frame.js"></script>
 
     <div class="input">
       <label for="knockdown">Knock down:</label>
@@ -74,6 +74,15 @@
     </div>
 
     <script>
+      var resetView = function () {
+        for (var i=0; i<10; i++){
+          for (var j=0; j<2; j++){
+            id = `#frame_${i+1}_roll_${j+1}`;
+            $(id).text("empty");
+          }
+        }
+      }
+
       $(document).ready(function(){
         var bowlingGame;
         var currentKnockDown;
@@ -86,6 +95,7 @@
         $("#which_frame_roll").text(bowlingGame.startNewFrame());
         //
         $("#restart").on("click", function(){
+          resetView();
           bowlingGame = new BowlingBoard();
           $("#which_frame_roll").text(bowlingGame.startNewFrame());
           $("#send_score").show();
