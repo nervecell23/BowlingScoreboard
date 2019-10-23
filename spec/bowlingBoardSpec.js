@@ -1,4 +1,74 @@
+// const BowlingBoard = require('../lib/bowlingBoard.js')
+
 describe("BowlingBoard", ()=>{
+
+  describe("#updateBonus", ()=>{
+    it("does not update bonus when current frame is 'normal'", ()=>{
+      subject = new BowlingBoard();
+      var doubleFrame = {
+        score: [2, 3],
+        result: "normal",
+        bonus: [],
+        setBonus: ()=>{}
+      };
+
+      spyOn(doubleFrame, "setBonus");
+      subject.frameList.push(doubleFrame);
+      subject.frameList.push(doubleFrame);
+      subject.updateBonus();
+      expect(subject.frameList[0]["bonus"]).toEqual([]);
+    });
+
+    it("updates bonus once when current frame is 'spare'", ()=>{
+      subject = new BowlingBoard();
+      var doubleFrame = {
+        score: [3, 7],
+        result: "spare",
+        bonus: [],
+        setBonus: (value)=>{
+          subject.frameList[0]['bonus'].push(value);
+        }
+      };
+
+      var doubleFrame2 = {
+        score: [2, 5],
+        result: "normal"
+      };
+
+      spyOn(doubleFrame, "setBonus").and.callThrough();
+
+      subject.frameList.push(doubleFrame);
+      subject.frameList.push(doubleFrame2);
+      subject.updateBonus();
+      expect(subject.frameList[0]["bonus"]).toEqual([2]);
+      expect(doubleFrame.setBonus).toHaveBeenCalledTimes(1);
+    });
+
+    it("updates bonus once when current frame is 'strike'", ()=>{
+      subject = new BowlingBoard();
+      var doubleFrame = {
+        score: [10],
+        result: "strike",
+        bonus: [],
+        setBonus: (value)=>{
+          subject.frameList[0]['bonus'].push(value);
+        }
+      };
+
+      var doubleFrame2 = {
+        score: [2, 5],
+        result: "normal"
+      };
+
+      spyOn(doubleFrame, "setBonus").and.callThrough();
+
+      subject.frameList.push(doubleFrame);
+      subject.frameList.push(doubleFrame2);
+      subject.updateBonus();
+      expect(subject.frameList[0]["bonus"]).toEqual([2, 5]);
+      expect(doubleFrame.setBonus).toHaveBeenCalledTimes(2);
+    });
+  });
 
   describe("#whichFrameAndRoll", ()=>{
     var doubleFrame, subject, txt;
@@ -10,12 +80,12 @@ describe("BowlingBoard", ()=>{
       }
 
       subject = new BowlingBoard();
-      for(var i = 0; i < 20; i++){
+      for(var i = 0; i < 10; i++){
         subject.frameList.push(doubleFrame);
       }
-      subject.currentFrame = subject.frameList[19];
+      subject.currentFrame = subject.frameList[9];
       txt = subject.whichFrameAndRoll();
-      expect(txt).toBe("Frame #20 Roll #1");
+      expect(txt).toBe("Frame #10 Roll #1");
     });
 
     it("display correct title for final frame with strike", ()=>{
@@ -25,128 +95,27 @@ describe("BowlingBoard", ()=>{
       }
 
       subject = new BowlingBoard();
-      for(var i = 0; i < 20; i++){
+      for(var i = 0; i < 10; i++){
         subject.frameList.push(doubleFrame);
       }
-      subject.currentFrame = subject.frameList[19];
+      subject.currentFrame = subject.frameList[9];
       txt = subject.whichFrameAndRoll();
-      expect(txt).toBe("Frame #20 Bonus roll #1");
+      expect(txt).toBe("Frame #10 Bonus roll #1");
     });
 
     it("display correct title for final frame with spare", ()=>{
       doubleFrame = {
-        score: [5,5],
+        score: [3,7],
         result: "spare"
       }
 
       subject = new BowlingBoard();
-      for(var i = 0; i < 20; i++){
+      for(var i = 0; i < 10; i++){
         subject.frameList.push(doubleFrame);
       }
-      subject.currentFrame = subject.frameList[19];
+      subject.currentFrame = subject.frameList[9];
       txt = subject.whichFrameAndRoll();
-      expect(txt).toBe("Frame #20 Bonus roll #1");
-    });
-  });
-
-  describe("#updateBonus", ()=>{
-    var doubleFrame, subject;
-
-    it("scenario #1 no bonus", ()=>{
-      doubleFrame = {
-        score: [2,3],
-        result: "normal",
-        setBonus: ()=>{}
-      }
-
-      spyOn(doubleFrame, "setBonus");
-
-      subject = new BowlingBoard();
-      subject.frameList.push(doubleFrame);
-      subject.frameList.push(doubleFrame);
-      subject.updateBonus();
-      expect(subject.frameList[0].setBonus).not.toHaveBeenCalled();
-    });
-
-    it("scenario #2 strike", ()=>{
-      doubleFrame = {
-        score: [10],
-        result: "strike",
-        setBonus: ()=>{}
-      }
-
-      doubleFrame_2 = {
-        score: [2,3],
-        result: "normal"
-      }
-
-      spyOn(doubleFrame, "setBonus");
-
-      subject = new BowlingBoard();
-      subject.frameList.push(doubleFrame);
-      subject.frameList.push(doubleFrame_2);
-      subject.updateBonus();
-      expect(subject.frameList[0].setBonus).toHaveBeenCalledWith(2);
-      expect(subject.frameList[0].setBonus).toHaveBeenCalledWith(3);
-      expect(subject.frameList[0].setBonus.calls.count()).toEqual(2);
-    });
-
-    it("scenario #3 spare", ()=>{
-      doubleFrame = {
-        score: [2,8],
-        result: "spare",
-        setBonus: ()=>{}
-      }
-
-      doubleFrame_2 = {
-        score: [2,3],
-        result: "normal"
-      }
-
-      spyOn(doubleFrame, "setBonus");
-
-      subject = new BowlingBoard();
-      subject.frameList.push(doubleFrame);
-      subject.frameList.push(doubleFrame_2);
-      subject.updateBonus();
-      expect(subject.frameList[0].setBonus).toHaveBeenCalledWith(2);
-      expect(subject.frameList[0].setBonus.calls.count()).toEqual(1);
-    });
-
-    it("scenario #4 consecutive strike", ()=>{
-      doubleFrame = {
-        score: [10],
-        result: "strike",
-        setBonus: ()=>{}
-      }
-
-      doubleFrame_1 = {
-        score: [10],
-        result: "strike",
-        setBonus: ()=>{}
-      }
-
-      doubleFrame_2 = {
-        score: [2,3],
-        result: "normal"
-      }
-
-      doubleFrame_3 = {
-        score: [2,3],
-        result: "normal"
-      }
-
-      spyOn(doubleFrame, "setBonus");
-
-      subject = new BowlingBoard();
-      subject.frameList.push(doubleFrame);
-      subject.frameList.push(doubleFrame_1);
-      subject.frameList.push(doubleFrame_2);
-      subject.frameList.push(doubleFrame_3);
-      subject.updateBonus();
-      expect(subject.frameList[0].setBonus).toHaveBeenCalledWith(10);
-      expect(subject.frameList[0].setBonus).toHaveBeenCalledWith(2);
-      expect(subject.frameList[0].setBonus.calls.count()).toEqual(2);
+      expect(txt).toBe("Frame #10 Bonus roll #1");
     });
   });
 
