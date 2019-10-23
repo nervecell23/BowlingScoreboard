@@ -1,3 +1,5 @@
+// const Frame = require('../lib/frame.js')
+
 describe("Frame", ()=>{
 
   describe("#setScore", ()=>{
@@ -37,6 +39,14 @@ describe("Frame", ()=>{
 
       var result = subject.calculateTotalScore();
       expect(result).toBe(6);
+    });
+
+    it("product total score with bonus", ()=>{
+      subject = new Frame();
+      subject.score = [10];
+      subject.bonus = [2, 3];
+
+      expect(subject.calculateTotalScore()).toEqual(15);
     });
   });
 
