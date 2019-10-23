@@ -2,6 +2,30 @@
 
 describe("BowlingBoard", ()=>{
 
+  describe("#calculateTotal", ()=>{
+    it("produces correct total score", ()=>{
+      subject = new BowlingBoard();
+      doubleFrame = {
+        score: [2, 3],
+        bonus: []
+      };
+      doubleFrame2 = {
+        score: [10],
+        bonus: [3, 7]
+      };
+      doubleFrame3 = {
+        score: [3, 7],
+        bonus: [5]
+      };
+
+      subject.frameList.push(doubleFrame);
+      subject.frameList.push(doubleFrame2);
+      subject.frameList.push(doubleFrame3);
+
+      expect(subject.calculateTotal()).toEqual(40);
+    });
+  });
+
   describe("#updateBonus", ()=>{
     it("does not update bonus when current frame is 'normal'", ()=>{
       subject = new BowlingBoard();
