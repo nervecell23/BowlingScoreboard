@@ -5,24 +5,20 @@ describe("BowlingBoard", ()=>{
   describe("#calculateTotal", ()=>{
     it("produces correct total score", ()=>{
       subject = new BowlingBoard();
-      doubleFrame = {
-        score: [2, 3],
-        bonus: []
-      };
-      doubleFrame2 = {
-        score: [10],
-        bonus: [3, 7]
-      };
-      doubleFrame3 = {
-        score: [3, 7],
-        bonus: [5]
-      };
 
-      subject.frameList.push(doubleFrame);
-      subject.frameList.push(doubleFrame2);
-      subject.frameList.push(doubleFrame3);
+      testFrame = new Frame();
+      testFrame.score.push(10);
+      testFrame.bonus.push(3);
+      testFrame.bonus.push(7);
+      testFrame2 = new Frame();
+      testFrame2.score.push(3);
+      testFrame2.score.push(7);
+      testFrame2.bonus.push(5);
 
-      expect(subject.calculateTotal()).toEqual(40);
+      subject.frameList.push(testFrame);
+      subject.frameList.push(testFrame2);
+
+      expect(subject.calculateTotal()).toEqual(35);
     });
   });
 
