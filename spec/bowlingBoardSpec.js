@@ -1,4 +1,5 @@
-// const BowlingBoard = require('../lib/bowlingBoard.js')
+const BowlingBoard = require('../lib/bowlingBoard.js');
+const Frame = require('../lib/frame.js');
 
 describe("BowlingBoard", ()=>{
 

@@ -1,4 +1,4 @@
-// const Frame = require('../lib/frame.js')
+const Frame = require('../lib/frame.js');
 
 describe("Frame", ()=>{
 
