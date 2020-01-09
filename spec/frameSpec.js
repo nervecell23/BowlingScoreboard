@@ -1,5 +1,3 @@
-const Frame = require('../lib/frame.js');
-
 describe("Frame", ()=>{
 
   describe("#setScore", ()=>{

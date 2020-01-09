@@ -1,6 +1,3 @@
-const BowlingBoard = require('../lib/bowlingBoard.js');
-const Frame = require('../lib/frame.js');
-
 describe("BowlingBoard", ()=>{
 
   describe("#calculateTotal", ()=>{
@@ -65,7 +62,7 @@ describe("BowlingBoard", ()=>{
       expect(doubleFrame.setBonus).toHaveBeenCalledTimes(1);
     });
 
-    it("updates bonus once when current frame is 'strike'", ()=>{
+    it("updates bonus twice when current frame is 'strike'", ()=>{
       subject = new BowlingBoard();
       var doubleFrame = {
         score: [10],
